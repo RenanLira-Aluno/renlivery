@@ -34,7 +34,8 @@ defmodule Renlivery.User do
 
   defp put_password_hash(%Changeset{valid?: true, changes: %{password: password}} = changeset) do
     changeset
-    |> change(%{password_hash: %{password_hash: Pbkdf2.hash_pwd_salt(password)}})
+    |> change(%{password_hash: Pbkdf2.hash_pwd_salt(password, digest: :sha256, format: :django)})
   end
+
   defp put_password_hash(changeset), do: changeset
 end
