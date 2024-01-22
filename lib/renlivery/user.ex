@@ -22,6 +22,14 @@ defmodule Renlivery.User do
     timestamps()
   end
 
+  @spec changeset(
+          {map(), map()}
+          | %{
+              :__struct__ => atom() | %{:__changeset__ => map(), optional(any()) => any()},
+              optional(atom()) => any()
+            },
+          :invalid | %{optional(:__struct__) => none(), optional(atom() | binary()) => any()}
+        ) :: Ecto.Changeset.t()
   def changeset(user \\ %__MODULE__{}, params) do
     user
     |> cast(params, @required_fields)
@@ -33,15 +41,12 @@ defmodule Renlivery.User do
     |> unique_constraint(:cpf)
     |> case do
       %Changeset{changes: %{password: _password}} = changeset ->
-        IO.inspect(changeset)
         validade_password(changeset)
 
       %Changeset{data: %User{id: nil}} = changeset ->
-        IO.inspect(changeset, label: "changeset")
         validade_password(changeset)
 
       changeset ->
-        IO.inspect(changeset)
         changeset
     end
   end
