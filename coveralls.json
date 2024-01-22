@@ -1,0 +1,7 @@
+{
+    "skip_files": [
+        "test/support",
+        "folder/file_to_skip.ex",
+        "lib/renlivery_web/telemetry.ex"
+    ]
+}

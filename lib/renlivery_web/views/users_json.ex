@@ -29,6 +29,15 @@ defmodule RenliveryWeb.UsersJSON do
     }
   end
 
+  def render("update.json", %{user: user}) do
+    %{
+      message: "User updated successfully",
+      data: %{
+        user: user
+      }
+    }
+  end
+
   def render("index.json", %{users: users}) do
     %{
       message: "Users fetched successfully",

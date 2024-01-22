@@ -1,8 +1,10 @@
 defmodule RenliveryWeb.Router do
+  alias RenliveryWeb.Plugs.UUIDChecker
   use RenliveryWeb, :router
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug UUIDChecker
   end
 
   scope "/api", RenliveryWeb do

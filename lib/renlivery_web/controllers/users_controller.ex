@@ -21,6 +21,14 @@ defmodule RenliveryWeb.UsersController do
     end
   end
 
+  def update(conn, %{"id" => _id} = params) do
+    with {:ok, %User{} = user} <- Renlivery.update_user(params) do
+      conn
+      |> put_status(:ok)
+      |> render("update.json", user: user)
+    end
+  end
+
   def show(conn, %{"id" => id}) do
     with {:ok, %User{} = user} <- Renlivery.get_user_by_id(id) do
       conn
