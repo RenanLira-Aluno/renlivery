@@ -6,6 +6,8 @@ defmodule Renlivery.User do
   @primary_key {:id, :binary_id, autogenerate: true}
   @required_fields [:name, :age, :address, :cep, :cpf, :email, :password]
 
+  @derive {Jason.Encoder, only: [:id, :name, :age, :address, :cep, :cpf, :email]}
+
   schema "users" do
     field :name, :string
     field :age, :integer

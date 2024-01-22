@@ -11,15 +11,34 @@ defmodule RenliveryWeb.UsersJSON do
     }
   end
 
+  def render("show.json", %{user: user}) do
+    %{
+      message: "User fetched successfully",
+      data: %{
+        user: user
+      }
+    }
+  end
+
+  def render("delete.json", %{user: user}) do
+    %{
+      message: "User deleted successfully",
+      data: %{
+        user: user
+      }
+    }
+  end
+
   def render("index.json", %{users: users}) do
     %{
       message: "Users fetched successfully",
-      data: Enum.map(users, fn user ->
-        %{
-          id: user.id,
-          cpf: user.cpf
-        }
-      end)
+      data:
+        Enum.map(users, fn user ->
+          %{
+            id: user.id,
+            cpf: user.cpf
+          }
+        end)
     }
   end
 end
