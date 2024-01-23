@@ -20,4 +20,3 @@ defmodule RenliveryWeb.UsersControllerTest do
     end
   end
 end
- 
