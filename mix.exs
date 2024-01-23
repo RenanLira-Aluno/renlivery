@@ -41,6 +41,7 @@ defmodule Renlivery.MixProject do
   defp deps do
     [
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:ex_machina, "~> 2.7.0"},
       {:excoveralls, "~> 0.18", only: :test},
       {:pbkdf2_elixir, "~> 2.0"},
       {:phoenix, "~> 1.7.10"},

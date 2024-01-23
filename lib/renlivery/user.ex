@@ -1,8 +1,8 @@
 defmodule Renlivery.User do
-  alias Renlivery.User
   alias Ecto.Changeset
   use Ecto.Schema
   import Ecto.Changeset
+  alias Renlivery.User
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @required_fields [:name, :age, :address, :cep, :cpf, :email, :password]
@@ -22,14 +22,6 @@ defmodule Renlivery.User do
     timestamps()
   end
 
-  @spec changeset(
-          {map(), map()}
-          | %{
-              :__struct__ => atom() | %{:__changeset__ => map(), optional(any()) => any()},
-              optional(atom()) => any()
-            },
-          :invalid | %{optional(:__struct__) => none(), optional(atom() | binary()) => any()}
-        ) :: Ecto.Changeset.t()
   def changeset(user \\ %__MODULE__{}, params) do
     user
     |> cast(params, @required_fields)
