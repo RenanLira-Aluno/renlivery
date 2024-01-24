@@ -2,6 +2,7 @@ defmodule Renlivery.User do
   alias Ecto.Changeset
   use Ecto.Schema
   import Ecto.Changeset
+  alias Renlivery.Order
   alias Renlivery.User
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -18,6 +19,8 @@ defmodule Renlivery.User do
     field :email, :string
     field :password, :string, virtual: true
     field :password_hash, :string
+
+    has_many :orders, Order
 
     timestamps()
   end

@@ -1,4 +1,5 @@
 defmodule Renlivery.Item do
+  alias Renlivery.Order
   import Ecto.Changeset
   use Ecto.Schema
 
@@ -14,6 +15,8 @@ defmodule Renlivery.Item do
     field :description, :string
     field :price, :decimal
     field :photo, :string
+
+    many_to_many :orders, Order, join_through: "orders_items"
 
     timestamps()
   end
