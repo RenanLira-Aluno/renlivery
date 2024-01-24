@@ -13,6 +13,7 @@ defmodule RenliveryWeb.Router do
     get "/", WelcomeController, :index
     resources "/users", UsersController, except: [:new, :edit]
     resources "/items", ItemsController, except: [:new, :edit]
+    post "/orders", OrdersController, :create
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

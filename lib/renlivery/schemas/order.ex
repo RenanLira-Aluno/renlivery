@@ -13,6 +13,8 @@ defmodule Renlivery.Order do
 
   @payment_methods [:money, :credit_card, :debit_card]
 
+  @derive {Jason.Encoder, only: [:id, :address, :comments, :payment_method, :items]}
+
   schema "orders" do
     field :address, :string
     field :comments, :string
