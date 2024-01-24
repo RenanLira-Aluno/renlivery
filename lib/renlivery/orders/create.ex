@@ -1,38 +1,67 @@
 defmodule Renlivery.Orders.Create do
-  alias Renlivery.Error
-  alias Renlivery.Item
-  alias Renlivery.Repo
+  alias Renlivery.{Error, Item, Order, Repo}
+
   import Ecto.Query
 
   def call(params) do
     params
     |> fetch_items()
+    |> handle_insert_order(params)
   end
+
+  defp handle_insert_order({:ok, items}, params) do
+    params
+    |> Order.changeset(items)
+    |> Repo.insert()
+    |> case do
+      {:ok, %Order{}} = result ->
+        result
+
+      {:error, error} ->
+        {:error, Error.build(:bad_request, error)}
+    end
+  end
+
+  defp handle_insert_order(error, _params), do: error
 
   defp fetch_items(%{"items" => items_params}) do
     ids =
       Enum.map(items_params, & &1["id"])
       |> Enum.uniq()
 
-    items = get_all_items(ids)
+    ids
+    |> get_all_items_repo()
+    |> case do
+      {:error, _} = error -> error
+      items -> check_all_items_found(ids, items, items_params)
+    end
+  end
 
+  defp check_all_items_found(ids, items, items_params) do
     Enum.reduce(ids, {:ok, []}, fn id, acc ->
       {_, items_acc} = acc
 
       case Map.get(items, id) do
-        %Item{} = item -> {:ok, [item | items_acc]}
-        nil -> handle_error()
+        %Item{} = item ->
+          {:ok,
+           multiply_quantity_items(item, items_params) ++
+             items_acc}
+
+        nil ->
+          {:error, Error.build(:bad_request, "Item not found")}
       end
     end)
   end
 
-  defp get_all_items(ids) do
+  defp get_all_items_repo(ids) do
     from(item in Item, where: item.id in ^ids)
     |> Repo.all()
     |> Enum.reduce(%{}, fn item, acc -> Map.put(acc, item.id, item) end)
+  rescue
+    _ -> {:error, Error.build(:bad_request, "invalid id")}
   end
 
-  defp handle_error() do
-    {:error, Error.build(:bad_request, "Item not found")}
+  defp multiply_quantity_items(item, items_params) do
+    List.duplicate(item, Enum.find(items_params, fn i -> i["id"] == item.id end)["quantity"])
   end
 end

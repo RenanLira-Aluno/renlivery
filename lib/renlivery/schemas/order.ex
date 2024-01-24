@@ -7,8 +7,9 @@ defmodule Renlivery.Order do
   alias Renlivery.User
 
   @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
 
-  @required_params [:address, :comments, :payment_method, :user_id]
+  @required_params [:address, :comments, :payment_method, :user_id, :items]
 
   @payment_methods [:money, :credit_card, :debit_card]
 
@@ -19,11 +20,13 @@ defmodule Renlivery.Order do
 
     many_to_many :items, Item, join_through: "orders_items"
     belongs_to :user, User
+
+    timestamps()
   end
 
   def changeset(struct \\ %__MODULE__{}, params, items) do
     struct
-    |> cast(params, @required_params)
+    |> cast(params, @required_params -- [:items])
     |> validate_required(@required_params)
     |> put_assoc(:items, items)
   end
