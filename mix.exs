@@ -40,6 +40,8 @@ defmodule Renlivery.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:tesla, "~> 1.4"},
+      {:hackney, "~> 1.17"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.7.0"},
       {:excoveralls, "~> 0.18", only: :test},

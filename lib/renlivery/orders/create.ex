@@ -4,10 +4,28 @@ defmodule Renlivery.Orders.Create do
   import Ecto.Query
 
   def call(params) do
-    params
-    |> fetch_items()
-    |> handle_insert_order(params)
+    with {:ok, result} <- fetch_items(params),
+         {:ok, %Order{}} <- handle_insert_order(result, params) do
+      {:ok, result}
+    end
   end
+
+  defp fetch_items(%{"items" => items_params}) do
+    ids =
+      Enum.map(items_params, & &1["id"])
+      |> Enum.uniq()
+
+    ids
+    |> get_all_items_repo()
+    |> case do
+      {:error, _} = error -> error
+      items -> check_all_items_found(ids, items, items_params)
+    end
+  rescue
+    _ -> {:error, Error.build(:bad_request, "params invalid")}
+  end
+
+  defp fetch_items(_), do: {:error, Error.build(:bad_request, "params invalid")}
 
   defp handle_insert_order({:ok, items}, params) do
     params
@@ -23,19 +41,6 @@ defmodule Renlivery.Orders.Create do
   end
 
   defp handle_insert_order(error, _params), do: error
-
-  defp fetch_items(%{"items" => items_params}) do
-    ids =
-      Enum.map(items_params, & &1["id"])
-      |> Enum.uniq()
-
-    ids
-    |> get_all_items_repo()
-    |> case do
-      {:error, _} = error -> error
-      items -> check_all_items_found(ids, items, items_params)
-    end
-  end
 
   defp check_all_items_found(ids, items, items_params) do
     Enum.reduce(ids, {:ok, []}, fn id, acc ->

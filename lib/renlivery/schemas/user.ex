@@ -25,6 +25,12 @@ defmodule Renlivery.User do
     timestamps()
   end
 
+  def build(params) do
+    %User{}
+    |> changeset(params)
+    |> apply_action(:create)
+  end
+
   def changeset(user \\ %__MODULE__{}, params) do
     user
     |> cast(params, @required_fields)

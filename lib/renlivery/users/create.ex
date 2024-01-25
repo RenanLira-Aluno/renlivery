@@ -1,9 +1,24 @@
 defmodule Renlivery.Users.Create do
   alias Renlivery.{Error, Repo, User}
 
-  def call(params) do
-    params
-    |> User.changeset()
+  alias Renlivery.ApiCep.Client
+
+  def call(%{"cep" => cep} = params) do
+    with {:ok, %User{} = user} <- User.build(params),
+         {:ok, _} <- Client.get_cep(cep) do
+      insert_user_repo(user)
+    else
+      {:error, %Error{}} = error ->
+        error
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error, Error.build(:bad_request, changeset)}
+    end
+  end
+
+  defp insert_user_repo(user) do
+    user
+    |> User.changeset(%{})
     |> Repo.insert()
     |> handle_insert()
   end
