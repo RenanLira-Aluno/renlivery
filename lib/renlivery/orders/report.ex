@@ -7,6 +7,13 @@ defmodule Renlivery.Orders.Report do
 
   @default_block_size 500
 
+  @spec create(
+          binary()
+          | maybe_improper_list(
+              binary() | maybe_improper_list(any(), binary() | []) | char(),
+              binary() | []
+            )
+        ) :: :ok | {:error, atom()}
   def create(filename \\ "report.csv") do
     query = from(o in Order, order_by: o.user_id)
 
