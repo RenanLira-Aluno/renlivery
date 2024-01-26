@@ -1,13 +1,21 @@
 defmodule RenliveryWeb.UsersJSON do
   alias Renlivery.User
 
-  def render("create.json", %{user: %User{id: id, cpf: cpf}}) do
+  def render("create.json", %{user: %User{id: id, cpf: cpf}, token: token}) do
     %{
       message: "User created successfully",
+      token: token,
       data: %{
         id: id,
         cpf: cpf
       }
+    }
+  end
+
+  def render("signin.json", %{token: token}) do
+    %{
+      message: "User signed in successfully",
+      token: token
     }
   end
 

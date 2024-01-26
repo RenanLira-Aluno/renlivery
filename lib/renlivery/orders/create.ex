@@ -4,9 +4,9 @@ defmodule Renlivery.Orders.Create do
   import Ecto.Query
 
   def call(params) do
-    with {:ok, result} <- fetch_items(params),
-         {:ok, %Order{}} <- handle_insert_order(result, params) do
-      {:ok, result}
+    with {:ok, _} = result_items <- fetch_items(params),
+         {:ok, %Order{}} = orders <- handle_insert_order(result_items, params) do
+      orders
     end
   end
 
@@ -39,8 +39,6 @@ defmodule Renlivery.Orders.Create do
         {:error, Error.build(:bad_request, error)}
     end
   end
-
-  defp handle_insert_order(error, _params), do: error
 
   defp check_all_items_found(ids, items, items_params) do
     Enum.reduce(ids, {:ok, []}, fn id, acc ->

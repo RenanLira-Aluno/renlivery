@@ -7,13 +7,34 @@ defmodule RenliveryWeb.Router do
     plug UUIDChecker
   end
 
+  pipeline :auth do
+    plug RenliveryWeb.Auth.Pipeline
+  end
+
   scope "/api", RenliveryWeb do
     pipe_through :api
 
     get "/", WelcomeController, :index
-    resources "/users", UsersController, except: [:new, :edit]
-    resources "/items", ItemsController, except: [:new, :edit]
-    post "/orders", OrdersController, :create
+
+    scope "/auth" do
+      post "/signin", UsersController, :signin
+      post "/signup", UsersController, :create
+    end
+
+    scope "/users" do
+      pipe_through :auth
+      get "/", UsersController, :index
+      get "/:id", UsersController, :show
+      put "/:id", UsersController, :update
+      delete "/:id", UsersController, :delete
+    end
+
+    scope "" do
+      pipe_through :auth
+
+      post "/items", ItemsController, :create
+      post "/orders", OrdersController, :create
+    end
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

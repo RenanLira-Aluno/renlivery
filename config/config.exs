@@ -7,6 +7,15 @@
 # General application configuration
 import Config
 
+config :renlivery, RenliveryWeb.Auth.Guardian,
+  issuer: "renlivery",
+  # Secret key. You can use `mix guardian.gen.secret` to get one
+  secret_key: "QaCUOD2qn58M6FBhX9S1G1xs+sN6yGp4tVL9N8EIK3YWLGjN4DKr34yspUI5bsC6"
+
+config :renlivery, RenliveryWeb.Auth.Pipeline,
+  module: RenliveryWeb.Auth.Guardian,
+  error_handler: RenliveryWeb.Auth.ErrorHandler
+
 config :renlivery,
   ecto_repos: [Renlivery.Repo],
   generators: [timestamp_type: :utc_datetime]

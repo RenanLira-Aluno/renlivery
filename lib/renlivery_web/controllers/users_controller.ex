@@ -1,15 +1,29 @@
 defmodule RenliveryWeb.UsersController do
-  alias Renlivery.{Repo, User}
+  alias RenliveryWeb.Auth.Guardian
+  alias Renlivery.{Error, Repo, User}
   alias RenliveryWeb.FallbackController
   use RenliveryWeb, :controller
 
   action_fallback FallbackController
 
   def create(conn, user_params) do
-    with {:ok, %User{} = user} <- Renlivery.create_user(user_params) do
+    with {:ok, %User{} = user} <- Renlivery.create_user(user_params),
+         {:ok, token, _} <- Guardian.encode_and_sign(user) do
       conn
       |> put_status(:created)
-      |> render("create.json", user: user)
+      |> render("create.json", user: user, token: token)
+    end
+  end
+
+  def signin(conn, %{"email" => email, "password" => password}) do
+    with {:ok, %User{password_hash: password_hash} = user} <- Renlivery.get_user_by_email(email),
+         true <- Pbkdf2.verify_pass(password, password_hash),
+         {:ok, token, _} <- Guardian.encode_and_sign(user) do
+      conn
+      |> put_status(:ok)
+      |> render("signin.json", token: token)
+    else
+      _ -> {:error, Error.build(:unauthorized, "Invalid credentials")}
     end
   end
 
