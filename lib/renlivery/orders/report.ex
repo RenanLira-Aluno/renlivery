@@ -33,9 +33,19 @@ defmodule Renlivery.Orders.Report do
   end
 
   defp parse_line(%Order{user_id: user_id, payment_method: payment, items: items}) do
-    items_string = Enum.map(items, &item_string/1) |> Enum.join(";")
+    items_string =
+      Task.async(fn ->
+        Enum.map(items, &item_string/1) |> Enum.join(";")
+      end)
 
-    "#{user_id},#{payment},[#{items_string}],#{50.0}\n"
+    total_price =
+      Task.async(fn ->
+        Enum.reduce(items, Decimal.new("0.00"), &Decimal.add(&1.price, &2))
+      end)
+
+    [items_string, total_price] = Task.await_many([items_string, total_price], 10_000)
+
+    "#{user_id},#{payment},[#{items_string}],#{total_price}\n"
   end
 
   defp item_string(%Item{description: description, price: price, category: category}) do

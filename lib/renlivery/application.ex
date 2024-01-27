@@ -17,7 +17,9 @@ defmodule Renlivery.Application do
       # Start a worker by calling: Renlivery.Worker.start_link(arg)
       # {Renlivery.Worker, arg},
       # Start to serve requests, typically the last entry
-      RenliveryWeb.Endpoint
+      RenliveryWeb.Endpoint,
+      # Start the report runner
+      Renlivery.Orders.ReportRunner
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

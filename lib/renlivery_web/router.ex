@@ -29,7 +29,7 @@ defmodule RenliveryWeb.Router do
       delete "/:id", UsersController, :delete
     end
 
-    scope "" do
+    scope "/create" do
       pipe_through :auth
 
       post "/items", ItemsController, :create
