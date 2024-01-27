@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+config :canary, repo: Renlivery.Repo
+
 config :renlivery, RenliveryWeb.Auth.Guardian,
   issuer: "renlivery",
   # Secret key. You can use `mix guardian.gen.secret` to get one

@@ -3,5 +3,6 @@ defmodule RenliveryWeb.Auth.Pipeline do
 
   plug Guardian.Plug.VerifyHeader
   plug Guardian.Plug.EnsureAuthenticated
+
   plug Guardian.Plug.LoadResource
 end
