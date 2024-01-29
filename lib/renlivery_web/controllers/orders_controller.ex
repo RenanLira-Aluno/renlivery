@@ -10,7 +10,6 @@ defmodule RenliveryWeb.OrdersController do
   action_fallback RenliveryWeb.FallbackController
 
   def create(conn, params) do
-    IO.inspect(conn)
     user = Guardian.Plug.current_resource(conn)
 
     params =
