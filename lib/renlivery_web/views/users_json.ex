@@ -53,6 +53,7 @@ defmodule RenliveryWeb.UsersJSON do
         Enum.map(users, fn user ->
           %{
             id: user.id,
+            is_admin: user.is_admin,
             cpf: user.cpf
           }
         end)

@@ -1,9 +1,13 @@
 defmodule RenliveryWeb.UsersController do
+  use RenliveryWeb, :controller
+
+  import Canary.Plugs
+
   alias RenliveryWeb.Auth.Guardian
   alias Renlivery.{Error, Repo, User}
   alias RenliveryWeb.FallbackController
-  use RenliveryWeb, :controller
 
+  plug :authorize_resource, model: User, except: [:create]
   action_fallback FallbackController
 
   def create(conn, user_params) do

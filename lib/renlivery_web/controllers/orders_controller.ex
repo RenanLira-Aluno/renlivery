@@ -1,14 +1,16 @@
 defmodule RenliveryWeb.OrdersController do
-
+  use RenliveryWeb, :controller
+  import Canary.Plugs
 
   alias Renlivery.Order
   alias RenliveryWeb.Auth.Guardian
-  use RenliveryWeb, :controller
 
+  plug :authorize_resource, model: Order
 
   action_fallback RenliveryWeb.FallbackController
 
   def create(conn, params) do
+    IO.inspect(conn)
     user = Guardian.Plug.current_resource(conn)
 
     params =

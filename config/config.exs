@@ -8,6 +8,7 @@
 import Config
 
 config :canary, repo: Renlivery.Repo
+config :canary, unauthorized_handler: {RenliveryWeb.Auth.ErrorHandler, :unauthorized}
 
 config :renlivery, RenliveryWeb.Auth.Guardian,
   issuer: "renlivery",

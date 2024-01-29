@@ -5,4 +5,5 @@ defmodule RenliveryWeb.Auth.Pipeline do
   plug Guardian.Plug.EnsureAuthenticated
 
   plug Guardian.Plug.LoadResource
+  plug RenliveryWeb.Auth.CurrentUser
 end
