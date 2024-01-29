@@ -35,6 +35,8 @@ defmodule RenliveryWeb.Router do
       post "/items", ItemsController, :create
       post "/orders", OrdersController, :create
     end
+
+    get "gen-hash-api-pass", SiteController, :gen_hash_api_pass
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

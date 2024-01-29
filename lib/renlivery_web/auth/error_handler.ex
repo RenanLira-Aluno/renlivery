@@ -15,7 +15,7 @@ defmodule RenliveryWeb.Auth.ErrorHandler do
     body = Jason.encode!(%{message: "Unauthorized"})
 
     conn
-    |> Conn.send_resp(401, body)
+    |> Conn.send_resp(403, body)
     |> Conn.halt()
   end
 end
